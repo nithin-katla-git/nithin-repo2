@@ -1,0 +1,10 @@
+{
+	"server_name": {
+		"type": "string",
+		"value": "DESKTOP-1V5F7S6"
+	},
+	"db_name": {
+		"type": "string",
+		"value": "AdventureWorks2022"
+	}
+}

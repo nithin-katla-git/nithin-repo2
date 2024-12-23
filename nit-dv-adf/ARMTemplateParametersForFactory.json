@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "nit-dv-adf"
+		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
+		"AzureDatabricks_ans_ls_accessToken": {
+			"value": ""
+		},
+		"adb_ls_accessToken": {
+			"value": ""
+		},
+		"adls_lnk_accountKey": {
+			"value": ""
+		},
+		"adls_lnk_ansh_json_accountKey": {
+			"value": ""
+		},
+		"onprem_sql_ls_password": {
+			"value": ""
+		},
+		"AzureDatabricks_ans_ls_properties_typeProperties_existingClusterId": {
+			"value": "https://adb-2019241688912876.16.azuredatabricks.net/compute/clusters/1206-111149-fg9qs9c8?o=2019241688912876"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://nitkv.vault.azure.net/"
+		},
+		"HttpServer1_ls_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/"
+		},
+		"adb_ls_properties_typeProperties_existingClusterId": {
+			"value": "1201-100913-2lm9hgq8"
+		},
+		"adls_lnk_properties_typeProperties_url": {
+			"value": "https://extsanithin.dfs.core.windows.net/"
+		},
+		"adls_lnk_ansh_json_properties_typeProperties_url": {
+			"value": "https://nithinsa.dfs.core.windows.net/"
+		},
+		"onprem_sql_ls_properties_typeProperties_server": {
+			"value": "@{linkedService().p_server_name}"
+		},
+		"onprem_sql_ls_properties_typeProperties_database": {
+			"value": "@{linkedService().p_db_name}"
+		},
+		"onprem_sql_ls_properties_typeProperties_userName": {
+			"value": "onprem_sql"
+		},
+		"AzureDataLakeStorage890_properties_privateLinkResourceId": {
+			"value": "/subscriptions/ce564531-c37a-4c8b-ad78-9628d4b82430/resourceGroups/nit_rg/providers/Microsoft.Storage/storageAccounts/nithinsa"
+		},
+		"AzureDataLakeStorage890_properties_groupId": {
+			"value": "dfs"
+		}
+	}
+}

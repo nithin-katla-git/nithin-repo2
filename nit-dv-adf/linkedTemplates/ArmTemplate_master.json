@@ -1,0 +1,181 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "nit-dv-adf"
+		},
+		"AzureDatabricks1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+		},
+		"AzureDatabricks_ans_ls_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_ans_ls'"
+		},
+		"adb_ls_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'adb_ls'"
+		},
+		"adls_lnk_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adls_lnk'"
+		},
+		"adls_lnk_ansh_json_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adls_lnk_ansh_json'"
+		},
+		"onprem_sql_ls_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'onprem_sql_ls'"
+		},
+		"AzureDatabricks_ans_ls_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "https://adb-2019241688912876.16.azuredatabricks.net/compute/clusters/1206-111149-fg9qs9c8?o=2019241688912876"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://nitkv.vault.azure.net/"
+		},
+		"HttpServer1_ls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://raw.githubusercontent.com/"
+		},
+		"adb_ls_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1201-100913-2lm9hgq8"
+		},
+		"adls_lnk_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://extsanithin.dfs.core.windows.net/"
+		},
+		"adls_lnk_ansh_json_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://nithinsa.dfs.core.windows.net/"
+		},
+		"onprem_sql_ls_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "@{linkedService().p_server_name}"
+		},
+		"onprem_sql_ls_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().p_db_name}"
+		},
+		"onprem_sql_ls_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "onprem_sql"
+		},
+		"AzureDataLakeStorage890_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/ce564531-c37a-4c8b-ad78-9628d4b82430/resourceGroups/nit_rg/providers/Microsoft.Storage/storageAccounts/nithinsa"
+		},
+		"AzureDataLakeStorage890_properties_groupId": {
+			"type": "string",
+			"defaultValue": "dfs"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "nit-dv-adf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureDatabricks1_accessToken": {
+						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					},
+					"onprem_sql_ls_password": {
+						"value": "[parameters('onprem_sql_ls_password')]"
+					},
+					"AzureDatabricks_ans_ls_accessToken": {
+						"value": "[parameters('AzureDatabricks_ans_ls_accessToken')]"
+					},
+					"adb_ls_accessToken": {
+						"value": "[parameters('adb_ls_accessToken')]"
+					},
+					"adls_lnk_accountKey": {
+						"value": "[parameters('adls_lnk_accountKey')]"
+					},
+					"adls_lnk_ansh_json_accountKey": {
+						"value": "[parameters('adls_lnk_ansh_json_accountKey')]"
+					},
+					"AzureKeyVault1_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					},
+					"onprem_sql_ls_properties_typeProperties_server": {
+						"value": "[parameters('onprem_sql_ls_properties_typeProperties_server')]"
+					},
+					"onprem_sql_ls_properties_typeProperties_database": {
+						"value": "[parameters('onprem_sql_ls_properties_typeProperties_database')]"
+					},
+					"onprem_sql_ls_properties_typeProperties_userName": {
+						"value": "[parameters('onprem_sql_ls_properties_typeProperties_userName')]"
+					},
+					"AzureDataLakeStorage890_properties_privateLinkResourceId": {
+						"value": "[parameters('AzureDataLakeStorage890_properties_privateLinkResourceId')]"
+					},
+					"AzureDataLakeStorage890_properties_groupId": {
+						"value": "[parameters('AzureDataLakeStorage890_properties_groupId')]"
+					},
+					"AzureDatabricks_ans_ls_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricks_ans_ls_properties_typeProperties_existingClusterId')]"
+					},
+					"HttpServer1_ls_properties_typeProperties_url": {
+						"value": "[parameters('HttpServer1_ls_properties_typeProperties_url')]"
+					},
+					"adb_ls_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('adb_ls_properties_typeProperties_existingClusterId')]"
+					},
+					"adls_lnk_properties_typeProperties_url": {
+						"value": "[parameters('adls_lnk_properties_typeProperties_url')]"
+					},
+					"adls_lnk_ansh_json_properties_typeProperties_url": {
+						"value": "[parameters('adls_lnk_ansh_json_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "nit-dv-adf_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'nit-dv-adf_ArmTemplate_0')]"
+			]
+		}
+	]
+}
