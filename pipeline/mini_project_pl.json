@@ -286,6 +286,33 @@
 								"referenceName": "adb_ls",
 								"type": "LinkedServiceReference"
 							}
+						},
+						{
+							"name": "bronze_silver",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "raw_to_bronze",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/min_prj_end_to_end/raw_to_silver"
+							},
+							"linkedServiceName": {
+								"referenceName": "adb_ls",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
