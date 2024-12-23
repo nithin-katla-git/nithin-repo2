@@ -1,0 +1,47 @@
+{
+	"name": "onprem_sql_ds",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "onprem_sql_ls",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"p_db_name": {
+					"value": "@dataset().db_name",
+					"type": "Expression"
+				},
+				"p_server_name": {
+					"value": "@dataset().server_name",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"db_name": {
+				"type": "String"
+			},
+			"server_name": {
+				"type": "String"
+			},
+			"schema_name": {
+				"type": "String"
+			},
+			"table_name": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().schema_name",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().table_name",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

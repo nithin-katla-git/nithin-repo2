@@ -1,0 +1,343 @@
+{
+	"name": "incremental_mini_project_pl",
+	"properties": {
+		"activities": [
+			{
+				"name": "read_onprem_control_table",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "select * from dbo.mini_prj_contrl_table ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "onprem_sql_ds",
+						"type": "DatasetReference",
+						"parameters": {
+							"db_name": {
+								"value": "@pipeline().globalParameters.db_name",
+								"type": "Expression"
+							},
+							"server_name": {
+								"value": "@pipeline().globalParameters.server_name",
+								"type": "Expression"
+							},
+							"schema_name": "dbo",
+							"table_name": "mini_prj_"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "iterate_data_copy",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "read_onprem_control_table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('read_onprem_control_table').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "oprem_to_raw",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "set_schema_name",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "set_table_name",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('select * from ', variables('v_schema_name'), '.', variables('v_table_name'), ' where last_modified_time_stamp >= ''', item().last_modified_time_stamp, '''')\n",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "onprem_sql_ds",
+									"type": "DatasetReference",
+									"parameters": {
+										"db_name": {
+											"value": "@pipeline().globalParameters.db_name",
+											"type": "Expression"
+										},
+										"server_name": {
+											"value": "@pipeline().globalParameters.server_name",
+											"type": "Expression"
+										},
+										"schema_name": {
+											"value": "@item().source_schema",
+											"type": "Expression"
+										},
+										"table_name": {
+											"value": "@item().source_table_name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "adls_ds",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder_path": {
+											"value": "@item().raw_location",
+											"type": "Expression"
+										},
+										"file_name": {
+											"value": "@concat(item().source_table_name,'.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "archieve_raw",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "oprem_to_raw",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "adls_ds",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder_path": {
+											"value": "@item().raw_location",
+											"type": "Expression"
+										},
+										"file_name": {
+											"value": "@concat(item().source_table_name,'.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "adls_ds",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder_path": {
+											"value": "@item().archive_location",
+											"type": "Expression"
+										},
+										"file_name": {
+											"value": "@concat(item().source_table_name, '_', formatDateTime(utcNow(), 'yyyy_MM_dd_HH_mm_ss'), '.csv')\r\n",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "set_table_name",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "v_table_name",
+								"value": {
+									"value": "@item().source_table_name",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "set_schema_name",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "v_schema_name",
+								"value": {
+									"value": "@item().source_schema",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "update_control_table_last_modified_date",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "oprem_to_raw",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "onprem_sql_ls",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"p_db_name": {
+										"value": "@pipeline().globalParameters.db_name",
+										"type": "Expression"
+									},
+									"p_server_name": {
+										"value": "@pipeline().globalParameters.server_name",
+										"type": "Expression"
+									}
+								}
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat('UPDATE dbo.mini_prj_contrl_table SET last_modified_time_stamp = (SELECT MAX(last_modified_time_stamp) FROM ', variables('v_schema_name'), '.', variables('v_table_name'), ')')\n",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"v_table_name": {
+				"type": "String"
+			},
+			"v_schema_name": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-11-30T12:27:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

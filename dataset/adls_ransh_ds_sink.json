@@ -1,0 +1,38 @@
+{
+	"name": "adls_ransh_ds_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_lnk_ansh_json",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pr_container_sink": {
+				"type": "string"
+			},
+			"pr_file_sink": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().pr_file_sink",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().pr_container_sink",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

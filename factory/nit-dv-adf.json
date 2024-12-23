@@ -1,0 +1,21 @@
+{
+	"name": "nit-dv-adf",
+	"properties": {
+		"globalParameters": {
+			"server_name": {
+				"type": "string",
+				"value": "DESKTOP-1V5F7S6"
+			},
+			"db_name": {
+				"type": "string",
+				"value": "AdventureWorks2022"
+			}
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c02a993a-4292-46b7-bb21-9fa23895bb58",
+		"tenantId": "af784678-20f0-4195-a9f3-e5bf320544c9"
+	}
+}

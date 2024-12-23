@@ -1,0 +1,7 @@
+{
+	"name": "AzureDataLakeStorage890",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/ce564531-c37a-4c8b-ad78-9628d4b82430/resourceGroups/nit_rg/providers/Microsoft.Storage/storageAccounts/nithinsa",
+		"groupId": "dfs"
+	}
+}

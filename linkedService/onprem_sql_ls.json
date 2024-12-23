@@ -1,0 +1,29 @@
+{
+	"name": "onprem_sql_ls",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"p_db_name": {
+				"type": "String"
+			},
+			"p_server_name": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "@{linkedService().p_server_name}",
+			"database": "@{linkedService().p_db_name}",
+			"encrypt": "mandatory",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "onprem_sql",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiMzJjMDYyNy0wZTQyLTRiZGMtODM0My1mMWFiNjIzYjNmZmEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SFH-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
